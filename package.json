@@ -1,5 +1,5 @@
 {
-  "name": "taez",
+  "name": "tez",
   "version": "0.0.1",
   "description": "reatime stats server for 6w",
   "main": "index.js",
