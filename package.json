@@ -1,0 +1,10 @@
+{
+  "name": "taez",
+  "version": "0.0.1",
+  "description": "reatime stats server for 6w",
+  "main": "index.js",
+  "dependencies": {
+    "ws": "~0.4.25",
+    "pg": "~2.0.0"
+  }
+}
