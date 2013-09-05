@@ -5,3 +5,4 @@ specs
 .git*
 coverage.html
 lib-cov
+config.json

@@ -17,7 +17,7 @@ config.trackers.forEach(function (options) {
     counts[name] = count;
     emitter.emit('count', name, count);
   });
-  setInterval(tracker.lookup, 1000);
+  setInterval(tracker.lookup, 3000);
 });
 
 // Create a HTTP server
