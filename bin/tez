@@ -9,11 +9,11 @@ var config = require(path.resolve(args.config));
 var Tracker = require('../lib/Tracker');
 
 // Map of table row counts
-var counts = {};
+var counts = module.counts = {};
 
 // Message pipeline for realtime updates
 var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
+var emitter = module.emitter = new EventEmitter();
 
 // Create the DB trackers
 config.trackers.forEach(function (options) {
@@ -25,50 +25,8 @@ config.trackers.forEach(function (options) {
   setInterval(tracker.lookup, config.timer || 1000);
 });
 
-// Create a HTTP server
-var http = require('http');
-var jsonHeaders = { 'Content-Type': 'application/json' };
-var redirectHeaders = { 'Location': '/' };
-var server = http.createServer(function (req, resp) {
-  // Return all counts as JSON on /
-  if (req.url === '/') {
-    resp.writeHead(200, jsonHeaders);
-    resp.end(JSON.stringify(counts));
-  }
-  // Otherwise redirect to /
-  else {
-    resp.writeHead(302, redirectHeaders);
-    resp.end();
-  }
-});
-
-// Create a WebSocket Server
-var WebSocketServer = require('ws').Server;
-new WebSocketServer({
-  'server': server
-}).on('connection', function (client) {
-
-  // signup this connection for changes
-  function notify (table_name, count) {
-    var obj = {};
-    obj[table_name] = count;
-    client.send(JSON.stringify(obj));
-  }
-
-  // on client disconnect, clean up handler
-  client.on('close', function () {
-    emitter.removeListener('count', notify);
-  });
-
-  // send count changes as they happen
-  emitter.on('count', notify);
-
-  // send all the stats on first connect
-  client.send(JSON.stringify(counts));
-});
-
-
 // Start listening
+var server = require('../lib/server');
 var port = config.http.port || 1337;
 server.listen(port, function () {
   console.log('http/ws server started on port %d', port);
