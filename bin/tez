@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
+var optimist = require('optimist');
+var args = optimist.usage('tez --config [config_file]');
+args = args.demand(['c']).alias('c', 'config').argv;
+var path = require('path');
+
+var config = require(path.resolve(args.config));
 var Tracker = require('../lib/Tracker');
-var config = require('../config.json');
 
 // Map of table row counts
 var counts = {};
