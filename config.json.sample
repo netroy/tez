@@ -1,0 +1,21 @@
+{
+  "http": {
+    "port": 8000
+  },
+  "trackers": [
+    {
+      "type": "mysql",
+      "host": "localhost",
+      "database": "my_db",
+      "user": "root",
+      "password": "root"
+    },
+    {
+      "type": "postgres",
+      "host": "localhost",
+      "database": "my_db",
+      "user": "root",
+      "password": "root"
+    }
+  ]
+}

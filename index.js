@@ -1,72 +1,45 @@
-var PGClient = require('pg').Client;
-var WebSocketServer = require('ws').Server;
+var Tracker = require('./lib/Tracker');
+var config = require('./config.json');
+
+// Map of table row counts
+var counts = {};
+
+// Message pipeline for realtime updates
 var EventEmitter = require('events').EventEmitter;
-var http = require('http');
-
-var connUrl = 'tcp://localhost/wunderapi';
-var tables = {
-  'lists': 0,
-  'tasks': 0,
-  'shares': 0,
-  'reminders': 0
-};
-var countQuery = 'SELECT relname as table, n_live_tup as count FROM pg_stat_user_tables';
-
 var emitter = new EventEmitter();
-var client = new PGClient(connUrl);
-var connection = client.connection;
 
-function sync () {
-  client.query(countQuery, function (err, result) {
-    if (err) {
-      console.error('failed');
-      process.exit(-1);
-    }
-
-    if (result.rows && result.rows.length) {
-      result.rows.forEach(function (row) {
-        if (row.table in tables) {
-          tables[row.table] = row.count;
-        }
-      });
-    }
+// Create the DB trackers
+config.trackers.forEach(function (options) {
+  var tracker = new Tracker(options);
+  tracker.on('count', function (name, count) {
+    counts[name] = count;
+    emitter.emit('count', name, count);
   });
-}
-
-connection.on('notification', function (message) {
-  message = message || {};
-  var table_name = message.payload;
-  if (message.channel === 'creation' && table_name in tables) {
-    var count = ++tables[table_name];
-    emitter.emit('creation', table_name, count);
-  }
+  tracker.lookup();
 });
 
-connection.once('readyForQuery', function () {
-  // console.log('connnected');
-  client.query('LISTEN creation');
-  sync();
-});
-
-client.connect();
-
+// Create a HTTP server
+var http = require('http');
+var jsonHeaders = { 'Content-Type': 'application/json' };
+var redirectHeaders = { 'Location': '/' };
 var server = http.createServer(function (req, resp) {
+  // Return all counts as JSON on /
   if (req.url === '/') {
-    resp.writeHead(200, {
-      'Content-Type': 'application/json'
-    });
-    resp.end(JSON.stringify(tables));
-  } else {
-    resp.writeHead(302, {
-      'Location': '/'
-    });
+    resp.writeHead(200, jsonHeaders);
+    resp.end(JSON.stringify(counts));
+  }
+  // Otherwise redirect to /
+  else {
+    resp.writeHead(302, redirectHeaders);
     resp.end();
   }
 });
 
+// Create a WebSocket Server
+var WebSocketServer = require('ws').Server;
 new WebSocketServer({
   'server': server
-}).on('connection', function(client) {
+}).on('connection', function (client) {
 
   // signup this connection for changes
   function notify (table_name, count) {
@@ -74,13 +47,22 @@ new WebSocketServer({
     obj[table_name] = count;
     client.send(JSON.stringify(obj));
   }
+
+  // on client disconnect, clean up handler
   client.on('close', function () {
-    emitter.removeListener('creation', notify);
+    emitter.removeListener('count', notify);
   });
-  emitter.addListener('creation', notify);
+
+  // send count changes as they happen
+  emitter.on('count', notify);
 
   // send all the stats on first connect
-  client.send(JSON.stringify(tables));
+  client.send(JSON.stringify(counts));
 });
 
-server.listen(process.env.PORT || 1337);
+
+// Start listening
+var port = config.http.port || 1337;
+server.listen(port, function () {
+  console.log('http/ws server started on port %d', port);
+});

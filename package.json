@@ -1,10 +1,11 @@
 {
   "name": "tez",
-  "version": "0.0.1",
-  "description": "reatime stats server for 6w",
+  "version": "0.1.1",
+  "description": "reatime row counts for mysql/postgres tables",
   "main": "index.js",
   "dependencies": {
     "ws": "~0.4.25",
-    "pg": "~2.0.0"
+    "pg": "~2.0.0",
+    "mysql": "~2.0.0-alpha9"
   }
 }
