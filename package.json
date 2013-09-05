@@ -2,10 +2,31 @@
   "name": "tez",
   "version": "0.1.1",
   "description": "reatime row counts for mysql/postgres tables",
-  "main": "index.js",
+  "main": "bin/index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "bin": {
+    "tez": "./bin/tez"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:netroy/tez.git"
+  },
+  "keywords": [
+    "row count",
+    "mysql",
+    "postgres",
+    "realtime"
+  ],
+  "author": "netroy <aditya@netroy.in> (http://netroy.in/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/netroy/tez/issues"
+  },
   "dependencies": {
-    "ws": "~0.4.25",
-    "pg": "~2.0.0",
-    "mysql": "~2.0.0-alpha9"
+    "ws": "0.4.25",
+    "pg": "2.0.0",
+    "mysql": "2.0.0-alpha9"
   }
 }

@@ -1,5 +1,7 @@
-var Tracker = require('./lib/Tracker');
-var config = require('./config.json');
+#!/usr/bin/env node
+
+var Tracker = require('../lib/Tracker');
+var config = require('../config.json');
 
 // Map of table row counts
 var counts = {};
