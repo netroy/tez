@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:400");
+body {
+  background: #FAFAFA;
+  padding-top: 30px;
+  text-rendering: optimizelegibility;
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  color: #34495E;
+}
+header {
+  text-align: center;
+  font-size: 32px;
+  line-height: 60px;
+  text-shadow: 0 1px 0 #fff;
+}
+ul {
+  list-style: none;
+  max-width: 940px;
+  margin: 50px auto;
+  padding: 0;
+  text-align: center;
+}
+ul li {
+  width: 300px;
+  margin: 10px;
+  display: inline-block;
+  height: 160px;
+  border: 1px solid rgba(50,50,50,0.4);
+  font-weight: 400;
+  border-radius: 4px;
+  zoom: 0.5;
+  /*float: left;*/
+}
+
+li h3 {
+  color: #eee;
+  margin: 0;
+  padding: 10px;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: 1px;
+  font-weight: 400;
+  text-align: center;
+  border-bottom: 1px solid rgba(50,50,50,0.4);
+  /*text-transform: uppercase;*/
+  text-shadow: 0 1px 0 rgba(0,0,0,0.6);
+}
+li span {
+  display: block;
+  height: 115px;
+  font-size: 50px;
+  text-align: center;
+  line-height: 100px;
+  vertical-align: middle;
+  text-shadow: 0 1px 0 rgba(200, 200, 200, 0.5);
+  color: #1A334D;
+}
+
+li.users {
+  background-color: #9B59B6;
+}
+li.users h3 {
+  background-color: #8E44AD;
+}
+li.lists {
+  background-color: #1ABC9C;
+}
+li.lists h3 {
+  background-color: #16A085;
+}
+li.tasks {
+  background-color: #3498DB;
+}
+li.tasks h3 {
+  background-color: #2980B9;
+}
+li.shares {
+  background-color: #E74C3C;
+}
+li.shares h3 {
+  background-color: #D35400;
+}

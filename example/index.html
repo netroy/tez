@@ -1,0 +1,44 @@
+<!doctype html>
+<head>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Stats Stats Stats überall</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.2.min.js"></script>
+</head>
+<body>
+  <header>Wunderlist Live Stats</header>
+  <ul>
+    <li class="users">
+      <h3>Users</h3>
+      <span></span>
+    </li>
+    <li class="lists">
+      <h3>Lists</h3>
+      <span></span>
+    </li>
+    <li class="tasks">
+      <h3>Tasks</h3>
+      <span></span>
+    </li>
+    <li class="shares">
+      <h3>Shares</h3>
+      <span></span>
+    </li>
+  </ul>
+  <script type="text/javascript">
+    $(function ($) {
+      var ws = new WebSocket('ws://localhost:8000/');
+      ws.onmessage = function (e) {
+        try {
+          var data = JSON.parse(e.data);
+          Object.keys(data).forEach(function (type) {
+            $('ul li.' + type + ' span').html(data[type]);
+          });
+        } catch(x) {}
+      };
+    });
+  </script>
+</body>
+</head>
