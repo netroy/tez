@@ -22,7 +22,7 @@ config.trackers.forEach(function (options) {
     counts[name] = count;
     emitter.emit('count', name, count);
   });
-  setInterval(tracker.lookup, 3000);
+  setInterval(tracker.lookup, config.timer || 1000);
 });
 
 // Create a HTTP server
