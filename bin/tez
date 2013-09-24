@@ -5,11 +5,9 @@ var args = optimist.usage('tez --config [config_file]');
 args = args.demand(['c']).alias('c', 'config').argv;
 var path = require('path');
 
-var config = require(path.resolve(args.config));
-var Tracker = require('../lib/Tracker');
-
 // Map of table row counts
 var counts = module.counts = {};
+var config = module.config = require(path.resolve(args.config));
 
 // Message pipeline for realtime updates
 var EventEmitter = require('events').EventEmitter;
@@ -17,6 +15,7 @@ var emitter = module.emitter = new EventEmitter();
 emitter.setMaxListeners(0);
 
 // Create the DB trackers
+var Tracker = require('../lib/Tracker');
 config.trackers.forEach(function (options) {
   var tracker = new Tracker(options);
   tracker.on('count', function (name, count) {
@@ -24,7 +23,7 @@ config.trackers.forEach(function (options) {
     try {
       emitter.emit('count', name, count);
     } catch(e) {
-      console.error('tez', e);
+      console.error('tez', e.message, e.stack);
     }
   });
   setInterval(tracker.lookup, config.timer || 1000);
