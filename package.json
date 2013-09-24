@@ -1,6 +1,6 @@
 {
   "name": "tez",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "reatime row counts for mysql/postgres tables",
   "main": "bin/index.js",
   "engines": {
