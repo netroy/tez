@@ -14,13 +14,18 @@ var counts = module.counts = {};
 // Message pipeline for realtime updates
 var EventEmitter = require('events').EventEmitter;
 var emitter = module.emitter = new EventEmitter();
+emitter.setMaxListeners(0);
 
 // Create the DB trackers
 config.trackers.forEach(function (options) {
   var tracker = new Tracker(options);
   tracker.on('count', function (name, count) {
     counts[name] = count;
-    emitter.emit('count', name, count);
+    try {
+      emitter.emit('count', name, count);
+    } catch(e) {
+      console.error(name, count, e);
+    }
   });
   setInterval(tracker.lookup, config.timer || 1000);
 });
