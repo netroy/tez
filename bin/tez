@@ -24,7 +24,7 @@ config.trackers.forEach(function (options) {
     try {
       emitter.emit('count', name, count);
     } catch(e) {
-      console.error(name, count, e);
+      console.error('tez', e);
     }
   });
   setInterval(tracker.lookup, config.timer || 1000);
